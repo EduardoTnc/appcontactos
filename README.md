@@ -17,7 +17,7 @@ Este es un proyecto de gestión de contactos. Los usuarios pueden registrarse, i
 ## Instalación
 
 1. Clonar el repositorio.
-2. Crear una base de datos `contact_manager`.
+2. Crear una base de datos `app-contactos`.
 3. Importar el archivo SQL para crear las tablas necesarias.
 4. Configurar los detalles de la base de datos en `config/db.php`.
 5. Ejecutar la aplicación en un servidor local.
