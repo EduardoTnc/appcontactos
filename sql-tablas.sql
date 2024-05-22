@@ -40,5 +40,3 @@ CREATE TABLE contacto_grupo (
     FOREIGN KEY (contacto_id) REFERENCES contactos(contacto_id) ON DELETE CASCADE,
     FOREIGN KEY (creacion_grupo_id) REFERENCES creacion_grupo(creacion_grupo_id) ON DELETE CASCADE
 );
-
--- final
