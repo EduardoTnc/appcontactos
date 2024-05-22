@@ -7,7 +7,7 @@ Este es un proyecto de gestión de contactos. Los usuarios pueden registrarse, i
 - **config/db.php**: Configuración de la base de datos.
 - **public/**: Archivos públicos como CSS, JS y el punto de entrada principal (`index.php`).
 - **includes/**: Partes comunes como la cabecera, pie de página, barra de navegación y modales.
-- **views/**: Vistas de la aplicación (login, register, contacts, groups, dashboard).
+- **views/**: Vistas de la aplicación (login, register, contactos, groups).
 - **controllers/**: Controladores que manejan la lógica de la aplicación.
 - **models/**: Modelos que interactúan con la base de datos.
 - **helpers/**: Funciones de ayuda para sesiones, redirección y validación.

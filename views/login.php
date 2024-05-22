@@ -1,4 +1,10 @@
-<?php include '../includes/header.php'; ?>
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Contactos</title>
+</head>
 <!-- HTML DEL FORMULARIO DE INICIO DE SESIÓN (ANTIGUO)-->
 <!-- <div class="container">
     <h2>Iniciar Sesión</h2>
@@ -242,7 +248,6 @@
 
     </section>
 </body>
-<?php include '../includes/footer.php'; ?>
 
 <!-- SCRIPT JS PARA CAMBIAR ENTRE FORMULARIOS DE REGISTRO Y INICIO DE SESIÓN -->
 <script>
@@ -264,5 +269,4 @@
         })
     });
 </script>
-
 

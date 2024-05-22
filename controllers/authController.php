@@ -16,7 +16,7 @@ switch ($action) {
         if ($userData) {
             $_SESSION['user_id'] = $userData['usuario_id'];
             $_SESSION['user_name'] = $userData['nombre']; // Guardar el nombre del usuario en la sesión
-            header('Location: ../views/dashboard.php');
+            header('Location: ../views/contactos.php');
         } else {
             echo "Credenciales incorrectas";
         }
