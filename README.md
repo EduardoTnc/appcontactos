@@ -17,7 +17,7 @@ Este es un proyecto de gestión de contactos. Los usuarios pueden registrarse, i
 ## Instalación
 
 1. Clonar el repositorio.
-2. Importar el archivo SQL para crear la base de datos. (Si te sale algún error crea manualmente la DB con el nombre 'app-contactos' y ejecuta el archivo 'sql-tablas.sql')
+2. Importar el archivo SQL para crear la base de datos. (Si te sale algún error crea manualmente la DB con el nombre 'app-contactos' y ejecuta el archivo 'sql-tablas.sql' para crear las tablas.)
 3. Configurar los detalles de la base de datos en `config/db.php`.
 4. Ejecutar la aplicación en un servidor local.
 
