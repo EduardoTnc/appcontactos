@@ -82,7 +82,8 @@
                 <!-- Aquí se rellenarán los contactos con PHP -->
             </tbody>
         </table>
-    </div>
+        </div>
+</div>
 
     <?php include 'modales.php'; ?>
     <script src="abrir-cerrar-modales.js"></script>
@@ -99,4 +100,3 @@
 </body>
 
 </html>
-
