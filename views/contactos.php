@@ -30,36 +30,73 @@
                 </li>
             </ul>
         </div>
-    </nav <?php include '../controllers/authController.php'; ?> <div class="container">
-    <h2>Contactos</h2>
+    </nav>
+    <?php include '../controllers/authController.php'; ?> <div class="container">
+    </nav>
+     <h2>Contactos</h2>
 
-    <p>Bienvenido, <strong> <?php echo ($_SESSION['user_name']); ?></strong>, a su gestor de contactos.</p>
-
-    <div class="container lista-contactos">
+<p>Bienvenido, <strong> admin</strong>, a su gestor de contactos.</p>
+<div class="container lista-contactos">
         <h2>Contactos</h2>
-        <button class="btn btn-success" data-modal-target="#modalAddContact">Agregar Contacto</button>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+        
+        <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" class="form-control" id="apellido" name="apellido" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">email</label>
+                        <input type="email" class="form-control" id="email" name="email" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">direccion</label>
+                        <input type="tel" class="form-control" id="direccion" name="direccion" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_nacimiento">fecha_nacimiento</label>
+                        <input type="tel" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required="">
+                    </div>
+                    <div class="form-group">
+                        <label for="etiqueta	">etiqueta	</label>
+                        <input type="tel" class="form-control" id="etiqueta	" name="etiqueta	" required="">
+                    </div>
+                </div><div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                   
+                    <button class="btn btn-success" data-modal-target="#modalAddContact">Agregar Contacto</button>
+                </div><table class="table">
+           
             <tbody>
+            <form id="formAgregarContacto" action="../controllers/agregar_contacto.php" method="post"></form>
+                
+                
+            
                 <!-- Aquí se rellenarán los contactos con PHP -->
             </tbody>
         </table>
     </div>
 
-    </div>
     <?php include 'modales.php'; ?>
     <script src="abrir-cerrar-modales.js"></script>
+
+    
+    
+    
     
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
+
 </body>
 
 </html>
+
