@@ -10,7 +10,7 @@ class Contact
         $this->pdo = $pdo;
     }
 
-    public function add($data)
+    public function add($data, $fotoPerfil)
     {
         $stmt = $this->pdo->prepare("INSERT INTO contactos (usuario_id, nombre, apellido, email, telefono, direccion, fecha_nacimiento, foto_perfil, etiqueta) 
                                     VALUES (:usuario_id, :nombre, :apellido, :email, :telefono, :direccion, :fecha_nacimiento, :foto_perfil, :etiqueta)");
@@ -22,21 +22,34 @@ class Contact
             'telefono' => $data['telefono'],
             'direccion' => $data['direccion'],
             'fecha_nacimiento' => $data['fecha_nacimiento'],
-            'foto_perfil' => $data['foto_perfil'],
+            'foto_perfil' => $fotoPerfil,
             'etiqueta' => $data['etiqueta'],
         ]);
     }
 
-    public function edit($contactId, $data)
+    public function edit($contactId, $data, $fotoPerfil)
     {
-        $stmt = $this->pdo->prepare("UPDATE contactos SET nombre = :nombre, apellido = :apellido, email = :email, telefono = :telefono WHERE contacto_id = :contacto_id");
-        $stmt->execute([
+        // Construir la consulta de actualización dinámicamente
+        $query = "UPDATE contactos SET nombre = :nombre, apellido = :apellido, email = :email, telefono = :telefono, direccion = :direccion, fecha_nacimiento = :fecha_nacimiento, etiqueta = :etiqueta";
+        $params = [
             'nombre' => $data['nombre'],
             'apellido' => $data['apellido'],
             'email' => $data['email'],
             'telefono' => $data['telefono'],
+            'direccion' => $data['direccion'],
+            'fecha_nacimiento' => $data['fecha_nacimiento'],
+            'etiqueta' => $data['etiqueta'],
             'contacto_id' => $contactId
-        ]);
+        ];
+
+        if ($fotoPerfil) {
+            $query .= ", foto_perfil = :foto_perfil";
+            $params['foto_perfil'] = $fotoPerfil;
+        }
+
+        $query .= " WHERE contacto_id = :contacto_id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
     }
 
     public function delete($contactId)

@@ -11,21 +11,41 @@ $response = ['success' => false];
 switch ($action) {
     case 'add':
         $contact = new Contact($pdo);
-        $contact->add($_POST);
-        $response['success'] = true;
+
+        // Manejar la subida de archivos
+        $fotoPerfil = null;
+        if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+            $fotoPerfil = 'fotos/' . basename($_FILES['foto_perfil']['name']);
+            move_uploaded_file($_FILES['foto_perfil']['tmp_name'], '../views/' . $fotoPerfil);
+        }
+
+        // Agregar el contacto con la foto de perfil
+        $contact->add($_POST, $fotoPerfil);
+        echo json_encode(['success' => true]);
         header('Location: ../views/contactos.php');
         break;
 
     case 'edit':
         $contact = new Contact($pdo);
-        $contact->edit($_POST['contact_id'], $_POST);
-        $response['success'] = true;
+        
+         // Manejar la subida de archivos
+        $fotoPerfil = null;
+        if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+            $fotoPerfil = 'fotos/' . basename($_FILES['foto_perfil']['name']);
+            move_uploaded_file($_FILES['foto_perfil']['tmp_name'], '../views/' . $fotoPerfil);
+        }
+
+        // Editar el contacto con la foto de perfil
+        $contact->edit($_POST['contact_id'], $_POST, $fotoPerfil);
+        echo json_encode(['success' => true]);
+        header('Location: ../views/contactos.php');
         break;
 
     case 'delete':
         $contact = new Contact($pdo);
         $contact->delete($_POST['contact_id']);
         $response['success'] = true;
+        header('Location: ../views/contactos.php');
         break;
 
     case 'list':

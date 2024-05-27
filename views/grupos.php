@@ -50,7 +50,10 @@ $contactos = $contacto->getAllByUserId($userId);
 </nav
 <div class="container">
     <h2>Grupos</h2>
-    <button class="btn btn-success" data-modal-target="#modalAddGroup">Agregar Grupo</button>
+    <!-- <button class="btn btn-success" data-modal-target="#modalAddGroup">Agregar Grupo</button> -->
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddGroup">
+            Agregar Grupo
+        </button>
     <table class="table">
         <thead>
             <tr>

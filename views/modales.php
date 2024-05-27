@@ -2,7 +2,7 @@
 <div class="modal fade" id="modalAddContact" tabindex="-1" aria-labelledby="modalAddContactLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form id="formAddContact" method="POST" action="../controllers/contactController.php?action=add">
+            <form id="formAddContact" method="POST" action="../controllers/contactController.php?action=add" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalAddContactLabel">Agregar Contacto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -38,14 +38,10 @@
                         <label for="direccion">Dirección:</label>
                     </div>
 
-
-
                     <div class="input-group mb-3">
                         <span class="input-group-text" for="fecha_nacimiento">Fecha de nacimiento:</span>
                         <input type="date" class="form-control" placeholder="Fecha nacimiento" id="fecha_nacimiento" name="fecha_nacimiento" aria-label="Username" aria-describedby="basic-addon1" required>
                     </div>
-
-
 
                     <div class="input-group mb-3">
                         <label class="input-group-text" for="foto_perfil">Foto</label>
@@ -76,7 +72,7 @@
 <div class="modal fade" id="modalEditContact" tabindex="-1" aria-labelledby="modalEditContactLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form id="formEditContact" method="POST" action="../controllers/contactController.php?action=edit">
+            <form id="formEditContact" method="POST" action="../controllers/contactController.php?action=edit" enctype="multipart/form-data" >
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalEditContactLabel">Editar Contacto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

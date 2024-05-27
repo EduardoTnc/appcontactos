@@ -19,6 +19,8 @@ $contacto = new Contact($pdo);
 // Obtener todos los contactos del usuario desde la base de datos
 $contactos = $contacto->getAllByUserId($userId);
 
+$dir = "fotos/";
+
 ?>
 
 <!DOCTYPE html>
@@ -33,6 +35,7 @@ $contactos = $contacto->getAllByUserId($userId);
 </head>
 
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="../views/contactos.php">App Contactos</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,7 +79,11 @@ $contactos = $contacto->getAllByUserId($userId);
             <tbody>
                 <?php foreach ($contactos as $contacto) : ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($contacto['nombre']); ?></td>
+                        <td>
+                            <img src="<?php echo !empty($contacto['foto_perfil']) ? htmlspecialchars($contacto['foto_perfil']) : 'fotos/default-profile.png'; ?>" alt="Foto de perfil" width="50px" >
+                            
+                            <?php echo htmlspecialchars($contacto['nombre']); ?>
+                        </td>
                         <td><?php echo htmlspecialchars($contacto['apellido']); ?></td>
                         <td><?php echo htmlspecialchars($contacto['email']); ?></td>
                         <td><?php echo htmlspecialchars($contacto['telefono']); ?></td>
@@ -84,7 +91,7 @@ $contactos = $contacto->getAllByUserId($userId);
                             <!-- Botón para editar contacto -->
                             <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>">Editar</button>
                             <!-- Botón para eliminar contacto -->
-                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalDeleteContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>">Eliminar</button>
+                            <button class="btn btn-danger btn-sm btn-delete-contact" data-bs-toggle="modal" data-bs-target="#modalDeleteContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>">Eliminar</button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -97,6 +104,21 @@ $contactos = $contacto->getAllByUserId($userId);
 
     <!-- Incluir Bootstrap JS y dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Capturar evento de clic en los botones de eliminar
+            document.querySelectorAll('.btn-delete-contact').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Obtener el contacto_id del atributo data-contact-id
+                    const contactId = this.getAttribute('data-contact-id');
+                    // Asignar el contacto_id al campo oculto del formulario del modal
+                    document.getElementById('deleteContactId').value = contactId;
+                });
+            });
+        });
+    </script>
+
 
     <!-- Script para cargar datos en el modal de edición -->
     <script>
