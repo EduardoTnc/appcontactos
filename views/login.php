@@ -206,9 +206,9 @@
 
                 <h1>APP CONTACTOS <span class="cornflowerblue-color">INICIO DE SESIÓN</span></h1>
 
-                <p>Correo :<input type="email" name="email" id="email" maxlength="50" required /></p>
-                <p>Contraseña :<input type="password" name="password" id="password" maxlength="50" required /></p>
-                <p><input type="submit" id="" name="" class="boton-enviar" /></p>
+                <p>Correo :<input type="email" name="email" id="email-login" maxlength="50" required /></p>
+                <p>Contraseña :<input type="password" name="password" id="password-login" maxlength="50" required /></p>
+                <p><input type="submit" name="" class="boton-enviar" /></p>
 
                 <section class="cambioFormulario">
                     ¿No tienes una cuenta? →
@@ -224,8 +224,8 @@
                 <h1>APP CONTACTOS <span class="cornflowerblue-color">REGISTRO</span></h1>
 
                 <p>Ingresa tu nombre de usuario:<input type="text" name="nombre" id="nombre" maxlength="60" required /></p>
-                <p>Ingresa tu correo:<input type="email" name="email" id="email" maxlength="60" required /></p>
-                <p>Crea tu contraseña:<input type="password" name="password" id="password" maxlength="50" required /></p>
+                <p>Ingresa tu correo:<input type="email" name="email" id="email-register" maxlength="60" required /></p>
+                <p>Crea tu contraseña:<input type="password" name="password" id="password-register" maxlength="50" required /></p>
                 <p>
                     <input type="checkbox" name="info" checked="checked" />
                     Deseo recibir información sobre novedades y ofertas.
