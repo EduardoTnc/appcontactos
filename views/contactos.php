@@ -80,7 +80,7 @@ $dir = "fotos/";
                 <?php foreach ($contactos as $contacto) : ?>
                     <tr>
                         <td>
-                            <img src="<?php echo !empty($contacto['foto_perfil']) ? htmlspecialchars($contacto['foto_perfil']) : 'fotos/default-profile.png'; ?>" alt="Foto de perfil" width="50px" >
+                            <img src="<?php echo !empty($contacto['foto_perfil']) ? htmlspecialchars($contacto['foto_perfil']) : 'fotos/default-profile.png'; ?>" alt="Foto de perfil" width="50px" class"perfil-img" >
                             
                             <?php echo htmlspecialchars($contacto['nombre']); ?>
                         </td>
