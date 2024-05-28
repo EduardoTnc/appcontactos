@@ -59,10 +59,10 @@ class Contact
     }
 
     // Obtener todos los contactos de un usuario
-    public function getAllByUserId($userId)
+    public function obtenerContactos($usuarioID)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM contactos WHERE usuario_id = :usuario_id");
-        $stmt->execute(['usuario_id' => $userId]);
+        $stmt->execute(['usuario_id' => $usuarioID]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -73,4 +73,12 @@ class Contact
         $stmt->execute(['contacto_id' => $contactId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function obtenerTotalContactos($usuarioID) {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM contactos WHERE usuario_id = :usuario_id");
+        $stmt->execute(['usuario_id' => $usuarioID]);
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $resultado['total'];
+    }
+
 }

@@ -1,20 +1,29 @@
 <?php
-
-
+// Incluir archivos necesarios
 require_once '../config/db.php';
 require_once '../models/Contact.php';
 require_once '../controllers/authController.php';
 
-// Se verifica si el usuario está autenticado
+// Verificar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
-    header('Location: '. APP_URL .'views/login.php');
+    header('Location: ' . APP_URL . 'views/login.php');
     exit();
 }
 
-$userId = $_SESSION['user_id'];
-$contacto = new Contact($pdo);
-// Se obtienen todos los contactos de la base de datos
-$contactos = $contacto->getAllByUserId($userId);
+// Obtener el ID del usuario de la sesión
+$usuarioID = $_SESSION['user_id'];
+
+// Crear una instancia del modelo Contact
+$contacto = new Contact($conexion);
+
+// Obtener todos los contactos del usuario
+$contactos = $contacto->obtenerContactos($usuarioID);
+
+// Obtener el número de contactos del usuario
+$totalContactos = $contacto->obtenerTotalContactos($usuarioID);
+
+$rutaFotosPerfil = "fotos/";
+
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +35,8 @@ $contactos = $contacto->getAllByUserId($userId);
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">

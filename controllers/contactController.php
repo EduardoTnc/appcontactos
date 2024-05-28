@@ -10,7 +10,7 @@ $response = ['success' => false];
 
 switch ($action) {
     case 'add':
-        $contact = new Contact($pdo);
+        $contact = new Contact($conexion);
 
         // Manejar la subida de archivos
         $fotoPerfil = null;
@@ -26,7 +26,7 @@ switch ($action) {
         break;
 
     case 'edit':
-        $contact = new Contact($pdo);
+        $contact = new Contact($conexion);
         
          // Manejar la subida de archivos
         $fotoPerfil = null;
@@ -42,21 +42,21 @@ switch ($action) {
         break;
 
     case 'delete':
-        $contact = new Contact($pdo);
+        $contact = new Contact($conexion);
         $contact->delete($_POST['contact_id']);
         $response['success'] = true;
         header('Location: ../views/contactos.php');
         break;
 
     case 'list':
-        $contact = new Contact($pdo);
-        $contacts = $contact->getAllByUserId($_SESSION['user_id']);
+        $contact = new Contact($conexion);
+        $contacts = $contact->obtenerContactos($_SESSION['user_id']);
         $response['contacts'] = $contacts;
         $response['success'] = true;
         break;
 
     case 'get':
-        $contact = new Contact($pdo);
+        $contact = new Contact($conexion);
         $contactData = $contact->getById($_GET['contact_id']);
         $response['contact'] = $contactData;
         $response['success'] = true;

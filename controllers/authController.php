@@ -10,7 +10,7 @@ switch ($action) {
     case 'login':
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $user = new User($pdo);
+        $user = new User($conexion);
         $userData = $user->login($email, $password);
 
         if ($userData) {
@@ -26,7 +26,7 @@ switch ($action) {
         $nombre = $_POST['nombre'];
         $email = $_POST['email'];
         $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-        $user = new User($pdo);
+        $user = new User($conexion);
         $user->register($nombre, $email, $password);
         header('Location: ../views/login.php');
         break;

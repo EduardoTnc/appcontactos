@@ -3,8 +3,8 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="formAddContact" method="POST" action="../controllers/contactController.php?action=add" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAddContactLabel">Agregar Contacto</h5>
+                <div class="modal-header ">
+                    <h5 class="modal-title titulo_modal" id="modalAddContactLabel">Agregar Contacto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -74,7 +74,7 @@
         <div class="modal-content">
             <form id="formEditContact" method="POST" action="../controllers/contactController.php?action=edit" enctype="multipart/form-data" >
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalEditContactLabel">Editar Contacto</h5>
+                    <h5 class="modal-title titulo_modal" id="modalEditContactLabel">Editar Contacto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -136,11 +136,11 @@
 
 <!-- Modal Eliminar Contacto -->
 <div class="modal fade" id="modalDeleteContact" tabindex="-1" aria-labelledby="modalDeleteContactLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="formDeleteContact" method="POST" action="../controllers/contactController.php?action=delete">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalDeleteContactLabel">Eliminar Contacto</h5>
+                    <h5 class="modal-title titulo_modal" id="modalDeleteContactLabel">Eliminar Contacto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
