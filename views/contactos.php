@@ -2,6 +2,7 @@
 // Incluir archivos necesarios
 require_once '../config/db.php';
 require_once '../models/Contact.php';
+require_once '../models/Group.php';
 require_once '../controllers/authController.php';
 
 // Verificar si el usuario está logueado
@@ -24,6 +25,11 @@ $totalContactos = $contacto->obtenerTotalContactos($usuarioID);
 
 $rutaFotosPerfil = "fotos/";
 
+
+// Se obtienen los grupos del usuario actual
+$grupo = new Group($conexion);
+$grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
+
 ?>
 
 <!DOCTYPE html>
@@ -37,11 +43,12 @@ $rutaFotosPerfil = "fotos/";
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- links de scripts necesarios para el cargado de datos -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <style>
         body {
-            background-color: #e3eaff !important;
+            background-color: #bccae3 !important;
         }
 
         .col-10 {
@@ -63,17 +70,9 @@ $rutaFotosPerfil = "fotos/";
             align-items: center;
         }
 
-        .btn_add {
-            width: 100%;
-            border: 1px solid #333 !important;
-            background-color: #333 !important;
-        }
-
         .btn_add:hover {
             opacity: 0.8;
         }
-
-
 
         hr {
             height: 1px !important;
@@ -82,15 +81,11 @@ $rutaFotosPerfil = "fotos/";
             background-color: red;
         }
 
-        .bi-arrow-right-circle {
-            font-size: 30px;
-        }
 
         .titulo_modal {
             width: 100%;
             display: flex;
             justify-content: center;
-            color: #444;
             font-weight: bold;
             font-size: 20px;
             text-align: center;
@@ -194,72 +189,36 @@ $rutaFotosPerfil = "fotos/";
 
 <body>
 
-
-
-    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="../views/contactos.php">App Contactos</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="contactos.php">Contactos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="grupos.php">Grupos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../controllers/authController.php?action=logout">Cerrar Sesión</a>
-                </li>
-            </ul>
-        </div>
-    </nav> -->
-
-    <!-- Botón de toggle para la barra lateral -->
-    <!-- <button class="btn btn-primary toggle-button" id="sidebarToggle">☰</button> -->
-
-    <!-- Superposición para cerrar la barra lateral al hacer clic fuera -->
-    <!-- <div class="overlay" id="overlay"></div>
-
-    <div class="sidebar" id="sidebar">
-        <a href="#" class="navbar-brand">App Contactos</a>
-        <nav class="nav flex-column">
-            <a class="nav-link" href="contactos.php">Contactos</a>
-            <a class="nav-link" href="grupos.php">Grupos</a>
-            <a class="nav-link" href="../controllers/authController.php?action=logout">Cerrar Sesión</a>
-        </nav>
-    </div>
-    <h2>Contactos</h2>
-
-    <p>Bienvenido <strong><?php echo ($_SESSION['user_name']); ?></strong>, a su gestor de contactos.</p> -->
     <div class="container rounded-pill">
         <h1 class="text-center mt-4  fw-bold ">Bienvenido <strong><?php echo ($_SESSION['user_name']); ?></strong> a tu aplicación de contactos</h1>
     </div>
-    <div class="container">
-        <div class="row d-flex">
+    <div class="container-xxl">
+        <div class="row">
             <div class="col-10 ">
                 <div class="row justify-content-md-center">
                     <div class="col-md-12">
-                        <h3 class="text-center">
+                        <h3>
                             <span class="float-start">
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddContact">
-                                    Nuevo Contacto
-                                </button>
+
                             </span>
                             Tienes <?php echo $totalContactos ?> contactos registrados.
-                            <span class="float-end">
+                            <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#modalAddContact">
+                                Nuevo Contacto
+                            </button>
+                            <!-- <span class="float-end">
                                 <a href="exportar.php" class="btn btn-success" title="Exportar a CSV" download="empleados.csv"><i class="bi bi-filetype-csv"></i> Exportar</a>
-                            </span>
+                            </span> -->
                             <!-- <hr> -->
                         </h3>
+
+                        <!-- TABLA CONTACTOS -->
                         <div class="table-responsive">
-                            <table class="table table-hover  table-light" id="tabla_contactos">
+                            <table class="table table-hover" id="tabla_contactos">
                                 <thead class="table-dark">
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Nombre</th>
-                                        
+
                                         <th scope="col">Email</th>
                                         <th scope="col">Teléfono</th>
                                         <th scope="col">Acciones</th>
@@ -270,11 +229,10 @@ $rutaFotosPerfil = "fotos/";
                                         <tr>
                                             <th scope="row" class="align-middle"><?php echo $contacto['contacto_id']; ?></th>
                                             <td class="align-middle">
-                                                <img class="foto-perfil" src="<?php echo !empty($contacto['foto_perfil']) ? htmlspecialchars($contacto['foto_perfil']) : 'fotos/default-profile.png'; ?>" alt="Foto de perfil" >
-
+                                                <img class="foto-perfil" src="<?php echo !empty($contacto['foto_perfil']) ? htmlspecialchars($contacto['foto_perfil']) : 'fotos/default-profile.png'; ?>" alt="Foto de perfil">
                                                 <?php echo htmlspecialchars($contacto['nombre']); ?> <?php echo htmlspecialchars($contacto['apellido']); ?>
                                             </td>
-                                            
+
                                             <td class="align-middle"><?php echo htmlspecialchars($contacto['email']); ?></td>
                                             <td class="align-middle"><?php echo htmlspecialchars($contacto['telefono']); ?></td>
                                             <td class="align-middle">
@@ -293,24 +251,43 @@ $rutaFotosPerfil = "fotos/";
                     </div>
                 </div>
             </div>
-            <div class="col-2">
-                <h3 class="text-center mt-4">
-                    Grupos
-                    <hr>
-                </h3>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAddGroup">
-                    Agregar Grupo
+            <div class="col-2 text-center">
+
+                <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#modalAddGroup">
+                    Nuevo Grupo
                 </button>
-                <hr>
-                <table class="table">
-                    <thead>
-                        <tr class="table-light">
-                            <th>Nombre</th>
-                            <th>Acciones</th>
+
+                <h3 class="mt-4">
+                    Grupos
+                </h3>
+                <!-- TABLA GRUPOS -->
+
+                <table class="table table-hover" id="tabla_grupos">
+                    <thead class="table-dark">
+                        <tr>
+                            <!-- <th scope="col">#</th> -->
+                            <!-- <th scope="col">Nombre</th> -->
+                            <!-- <th scope="col">Acciones</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Aquí se rellenarán los grupos con PHP -->
+                        <?php foreach ($grupos as $grupo) : ?>
+                            <tr>
+                                <!-- <th scope="row" class="align-middle"><?php echo $grupo['creacion_grupo_id']; ?></th> -->
+                                <td class="align-middle"><?php echo htmlspecialchars($grupo['nombre_grupo']); ?></td>
+                                <td class="align-middle">
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" type="button" id="dropdownMenuButton<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Opciones
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo $grupo['creacion_grupo_id']; ?>">
+                                            <li><a class="dropdown-item btn-edit-group" href="#" data-group-id="<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalEditGroup">Editar</a></li>
+                                            <li><a class="dropdown-item btn-delete-group" href="#" data-group-id="<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalDeleteGroup">Eliminar</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -331,46 +308,10 @@ $rutaFotosPerfil = "fotos/";
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
-        document.getElementById('sidebarToggle').addEventListener('click', function() {
-            var sidebar = document.getElementById('sidebar');
-            var mainContent = document.getElementById('mainContent');
-            var overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('active');
-            mainContent.classList.toggle('shifted');
-            overlay.classList.toggle('active');
-            if (sidebar.classList.contains('active')) {
-                this.style.display = 'none'; // Ocultar el botón de toggle cuando la barra lateral esté desplegada
-            } else {
-                this.style.display = 'block';
-            }
-        });
-
-        document.getElementById('overlay').addEventListener('click', function() {
-            var sidebar = document.getElementById('sidebar');
-            var mainContent = document.getElementById('mainContent');
-            var overlay = document.getElementById('overlay');
-            sidebar.classList.remove('active');
-            mainContent.classList.remove('shifted');
-            overlay.classList.remove('active');
-            document.getElementById('sidebarToggle').style.display = 'block'; // Mostrar el botón de toggle nuevamente
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Capturar evento de clic en los botones de eliminar
-            document.querySelectorAll('.btn-delete-contact').forEach(button => {
-                button.addEventListener('click', function() {
-                    // Obtener el contacto_id del atributo data-contact-id
-                    const contactId = this.getAttribute('data-contact-id');
-                    // Asignar el contacto_id al campo oculto del formulario del modal
-                    document.getElementById('deleteContactId').value = contactId;
-                });
-            });
-        });
-
         // Script para cargar datos en el modal de edición
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.btn-primary').forEach(button => {
+            document.querySelectorAll('.btn-warning').forEach(button => {
                 button.addEventListener('click', () => {
                     const contactId = button.getAttribute('data-contact-id');
                     fetch(`../controllers/contactController.php?action=get&contact_id=${contactId}`)
@@ -386,12 +327,57 @@ $rutaFotosPerfil = "fotos/";
                                 document.getElementById('edit-direccion').value = contact.direccion;
                                 document.getElementById('edit-fecha-nacimiento').value = contact.fecha_nacimiento;
                                 document.getElementById('edit-etiqueta').value = contact.etiqueta;
+                            } else {
+                                console.error('Error fetching contact data:', data.message);
                             }
                         })
                         .catch(error => console.error('Error fetching contact data:', error));
                 });
             });
         });
+
+        // Script para cargar datos en el modal de eliminación de contactos
+        document.addEventListener('DOMContentLoaded', function() {
+            // Capturar evento de clic en los botones de eliminar
+            document.querySelectorAll('.btn-delete-contact').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Obtener el contacto_id del atributo data-contact-id
+                    const contactId = this.getAttribute('data-contact-id');
+                    // Asignar el contacto_id al campo oculto del formulario del modal
+                    document.getElementById('deleteContactId').value = contactId;
+                });
+            });
+        });
+
+
+        // Script para cargar datos en el modal de edición y eliminación de grupos
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-edit-group').forEach(button => {
+                button.addEventListener('click', () => {
+                    const groupId = button.getAttribute('data-group-id');
+                    fetch(`../controllers/groupController.php?action=get&group_id=${groupId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const group = data.group;
+                                document.getElementById('edit-group-id').value = group.creacion_grupo_id;
+                                document.getElementById('edit-nombre-grupo').value = group.nombre_grupo;
+                            } else {
+                                console.error('Error fetching group data:', data.message);
+                            }
+                        })
+                        .catch(error => console.error('Error fetching group data:', error));
+                });
+            });
+
+            document.querySelectorAll('.btn-delete-group').forEach(button => {
+                button.addEventListener('click', () => {
+                    const groupId = button.getAttribute('data-group-id');
+                    document.getElementById('delete-group-id').value = groupId;
+                });
+            });
+        });
+
     </script>
 
     <!-------------------------Librería  datatable para la tabla -------------------------->

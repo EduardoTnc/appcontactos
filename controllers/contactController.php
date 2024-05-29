@@ -55,6 +55,7 @@ switch ($action) {
         $response['success'] = true;
         break;
 
+    // Obtener un contacto por su ID (Para cargarlo en el modal de edición)
     case 'get':
         $contact = new Contact($conexion);
         $contactData = $contact->getById($_GET['contact_id']);

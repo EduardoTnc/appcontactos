@@ -110,13 +110,13 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <span class="input-group-text" for="edit-fecha_nacimiento">Fecha de nacimiento:</span>
-                        <input type="date" class="form-control" placeholder="Fecha nacimiento" id="edit-fecha_nacimiento" name="fecha_nacimiento" aria-label="Username" aria-describedby="basic-addon1">
+                        <span class="input-group-text" for="edit-fecha-nacimiento">Fecha de nacimiento:</span>
+                        <input type="date" class="form-control" placeholder="Fecha nacimiento" id="edit-fecha-nacimiento" name="fecha_nacimiento" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
 
                     <div class="input-group mb-3">
-                        <label class="input-group-text" for="edit-foto_perfil">Foto</label>
-                        <input type="file" class="form-control" id="edit-foto_perfil" name="foto_perfil" accept="image/png, image/jpeg, image/jpg">
+                        <label class="input-group-text" for="edit-foto-perfil">Foto</label>
+                        <input type="file" class="form-control" id="edit-foto_perfil" name="foto-perfil" accept="image/png, image/jpeg, image/jpg">
                     </div>
 
                     <div class="form-group form-floating mb-3">
@@ -132,6 +132,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 <!-- Modal Eliminar Contacto -->
@@ -158,47 +160,83 @@
 
 
 <!-- Modal Agregar Grupo -->
-<div class="modal" id="modalAddGroup">
-    <div class="modal-content">
-        <span class="modal-close">&times;</span>
-        <h2>Agregar Grupo</h2>
-        <form id="formAddGroup" method="POST" action="../../controllers/groupController.php?action=add">
-            <!-- Campos del formulario -->
-            <div class="form-group">
-                <label for="nombre_grupo">Nombre del Grupo:</label>
-                <input type="text" class="form-control" id="nombre_grupo" name="nombre_grupo" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-        </form>
+<div class="modal fade" id="modalAddGroup" tabindex="-1" aria-labelledby="modalAddGroupLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="formAddContact" method="POST" action="../controllers/groupController.php?action=add" enctype="multipart/form-data">
+                <div class="modal-header ">
+                    <h5 class="modal-title titulo_modal" id="modalAddGroupLabel">Crear un nuevo grupo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group form-floating mb-3">
+                                <input type="text" class="form-control" id="nombre_grupo" name="nombre_grupo" placeholder="Nombre del Grupo" required> 
+                                <label for="nombre_grupo">Nombre:</label>
+                            </div>
+                        </div>
+                        <!-- <div class="col">
+                            <div class="form-group d-flex">
+                                <label for="color">Color:</label>
+                                <input type="color" class="form-control form-control-color" id="color" value="#563d7c" title="Elige un color">
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Crear</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
 
 <!-- Modal Editar Grupo -->
-<div class="modal" id="modalEditGroup">
-    <div class="modal-content">
-        <span class="modal-close">&times;</span>
-        <h2>Editar Grupo</h2>
-        <form id="formEditGroup" method="POST" action="../../controllers/groupController.php?action=edit">
-            <!-- Campos del formulario -->
-            <input type="hidden" id="edit_group_id" name="group_id">
-            <div class="form-group">
-                <label for="edit_nombre_grupo">Nombre del Grupo:</label>
-                <input type="text" class="form-control" id="edit_nombre_grupo" name="nombre_grupo" required>
+<div class="modal fade" id="modalEditGroup" tabindex="-1" aria-labelledby="modalEditGroupLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formEditGroup" method="POST" action="../controllers/groupController.php?action=edit">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditGroupLabel">Editar Grupo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="edit-group-id" name="group_id">
+                        <div class="form-group form-floating mb-3">
+                            <input type="text" class="form-control" id="edit-nombre-grupo" name="nombre_grupo" placeholder="Nombre del Grupo" required>
+                            <label for="edit-nombre-grupo">Nombre del Grupo:</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
             </div>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-        </form>
+        </div>
     </div>
-</div>
 
-<!-- Modal Eliminar Grupo -->
-<div class="modal" id="modalDeleteGroup">
-    <div class="modal-content">
-        <span class="modal-close">&times;</span>
-        <h2>Eliminar Grupo</h2>
-        <p>¿Estás seguro de que deseas eliminar este grupo?</p>
-        <form id="formDeleteGroup" method="POST" action="../../controllers/groupController.php?action=delete">
-            <input type="hidden" id="delete_group_id" name="group_id">
-            <button type="submit" class="btn btn-danger">Eliminar</button>
-        </form>
+    <!-- Modal Eliminar Grupo -->
+    <div class="modal fade" id="modalDeleteGroup" tabindex="-1" aria-labelledby="modalDeleteGroupLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formDeleteGroup" method="POST" action="../controllers/groupController.php?action=delete">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDeleteGroupLabel">Eliminar Grupo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="delete-group-id" name="group_id">
+                        <p>¿Estás seguro de que deseas eliminar este grupo?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</div>

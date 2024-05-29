@@ -3,16 +3,16 @@
 
 class Contact
 {
-    private $pdo;
+    private $conexion;
 
     public function __construct($pdo)
     {
-        $this->pdo = $pdo;
+        $this->conexion = $pdo;
     }
 
     public function add($data, $fotoPerfil)
     {
-        $stmt = $this->pdo->prepare("INSERT INTO contactos (usuario_id, nombre, apellido, email, telefono, direccion, fecha_nacimiento, foto_perfil, etiqueta) 
+        $stmt = $this->conexion->prepare("INSERT INTO contactos (usuario_id, nombre, apellido, email, telefono, direccion, fecha_nacimiento, foto_perfil, etiqueta) 
                                     VALUES (:usuario_id, :nombre, :apellido, :email, :telefono, :direccion, :fecha_nacimiento, :foto_perfil, :etiqueta)");
         $stmt->execute([
             'usuario_id' => $_SESSION['user_id'],
@@ -48,20 +48,20 @@ class Contact
         }
 
         $query .= " WHERE contacto_id = :contacto_id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $this->conexion->prepare($query);
         $stmt->execute($params);
     }
 
     public function delete($contactId)
     {
-        $stmt = $this->pdo->prepare("DELETE FROM contactos WHERE contacto_id = :contacto_id");
+        $stmt = $this->conexion->prepare("DELETE FROM contactos WHERE contacto_id = :contacto_id");
         $stmt->execute(['contacto_id' => $contactId]);
     }
 
     // Obtener todos los contactos de un usuario
     public function obtenerContactos($usuarioID)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM contactos WHERE usuario_id = :usuario_id");
+        $stmt = $this->conexion->prepare("SELECT * FROM contactos WHERE usuario_id = :usuario_id");
         $stmt->execute(['usuario_id' => $usuarioID]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -69,13 +69,13 @@ class Contact
     // Obtener un contacto por su ID
     public function getById($contactId)
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM contactos WHERE contacto_id = :contacto_id');
+        $stmt = $this->conexion->prepare('SELECT * FROM contactos WHERE contacto_id = :contacto_id');
         $stmt->execute(['contacto_id' => $contactId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function obtenerTotalContactos($usuarioID) {
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) as total FROM contactos WHERE usuario_id = :usuario_id");
+        $stmt = $this->conexion->prepare("SELECT COUNT(*) as total FROM contactos WHERE usuario_id = :usuario_id");
         $stmt->execute(['usuario_id' => $usuarioID]);
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
         return $resultado['total'];
