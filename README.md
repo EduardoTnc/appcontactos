@@ -1,4 +1,5 @@
 # App Contactos
+# Git
 
 Este es un proyecto de gestión de contactos. Los usuarios pueden registrarse, iniciar sesión, y gestionar sus contactos y grupos.
 
