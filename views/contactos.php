@@ -1,33 +1,35 @@
 <?php
-// Incluir archivos necesarios
+// Incluir archivos necesarios para la configuración de la base de datos y los modelos
 require_once '../config/db.php';
 require_once '../models/Contact.php';
 require_once '../models/Group.php';
-require_once '../controllers/authController.php';
 
-// Verificar si el usuario está logueado
+// Iniciar sesión para acceder a las variables de sesión
+session_start();
+
+// Verificar si el usuario está logueado, si no, redirigir al formulario de login
 if (!isset($_SESSION['user_id'])) {
     header('Location: ' . APP_URL . 'views/login.php');
     exit();
 }
 
-// Obtener el ID del usuario de la sesión
+// Obtener el ID del usuario de la sesión actual
 $usuarioID = $_SESSION['user_id'];
 
-// Crear una instancia del modelo Contact
+// Crear una instancia del modelo Contact para interactuar con la base de datos
 $contacto = new Contact($conexion);
 
-// Obtener todos los contactos del usuario
+// Obtener todos los contactos del usuario actual usando el ID de la sesión
 $contactos = $contacto->obtenerContactos($usuarioID);
 
-// Obtener el número de contactos del usuario
+// Obtener el número total de contactos del usuario actual
 $totalContactos = $contacto->obtenerTotalContactos($usuarioID);
 
 $rutaFotosPerfil = "fotos/";
 
-
-// Se obtienen los grupos del usuario actual
+// Crear una instancia del modelo Group para interactuar con la base de datos
 $grupo = new Group($conexion);
+// Obtener los grupos del usuario actual
 $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
 
 ?>
@@ -114,70 +116,6 @@ $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
             padding: 0;
         }
 
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: -250px;
-            /* Oculta la barra lateral fuera de la vista inicialmente */
-            background-color: #343a40;
-            padding-top: 20px;
-            color: #fff;
-            transition: 0.3s;
-            /* Transición suave para el despliegue */
-            z-index: 1000;
-            /* Asegurar que la barra lateral esté sobre otros elementos */
-        }
-
-        .sidebar.active {
-            left: 0;
-            /* Despliega la barra lateral */
-        }
-
-        .sidebar a {
-            display: block;
-            color: white;
-            padding: 15px;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: #575757;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            /* Espacio para el botón de toggle */
-            padding: 20px;
-            transition: 0.3s;
-        }
-
-        .toggle-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            /* Asegurar que el botón esté sobre otros elementos */
-            transition: 0.3s;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            /* Justo debajo de la barra lateral */
-            display: none;
-        }
-
-        .overlay.active {
-            display: block;
-        }
 
         .foto-perfil {
             aspect-ratio: 1;
@@ -218,7 +156,6 @@ $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Nombre</th>
-
                                         <th scope="col">Email</th>
                                         <th scope="col">Teléfono</th>
                                         <th scope="col">Acciones</th>
@@ -235,9 +172,26 @@ $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
 
                                             <td class="align-middle"><?php echo htmlspecialchars($contacto['email']); ?></td>
                                             <td class="align-middle"><?php echo htmlspecialchars($contacto['telefono']); ?></td>
-                                            <td class="align-middle">
-                                                <!-- Botón para agregar contacto a grupos -->
-                                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#" data-contact-id="<?php echo $contacto['contacto_id']; ?>"><i class="bi bi-plus-circle"></i></button>
+                                            <td class="align-middle d-flex">
+                                                <div class="dropdown">
+                                                    <!-- Botón para agregar contacto a grupos -->
+                                                    <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" data-contact-id="<?php echo $contacto['contacto_id']; ?>" aria-expanded="false">
+                                                        <i class="bi bi-plus-circle"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-dark">
+                                                        <?php foreach ($grupos as $grupo) : ?>
+                                                            <li>
+                                                                <form action="../controllers/grupoContactosController.php" method="POST">
+                                                                    <input type="hidden" name="contacto_id" value="<?php echo $contacto['contacto_id']; ?>">
+                                                                    <input type="hidden" name="grupo_id" value="<?php echo $grupo['creacion_grupo_id']; ?>">
+                                                                    <button type="submit" class="dropdown-item"><?php echo htmlspecialchars($grupo['nombre_grupo']); ?></button>
+                                                                </form>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                        <li><a class="dropdown-item bg-success text-white btn" data-bs-toggle="modal" data-bs-target="#modalAddGroup">Crear un nuevo grupo</a></li>
+                                                    </ul>
+                                                </div>
+
                                                 <!-- Botón para editar contacto -->
                                                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>"><i class="bi bi-pencil-square"></i></button>
                                                 <!-- Botón para eliminar contacto -->
@@ -262,7 +216,7 @@ $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
                 </h3>
                 <!-- TABLA GRUPOS -->
 
-                <table class="table table-hover" id="tabla_grupos">
+                <table class="table table-hover table-dark" id="tabla_grupos">
                     <thead class="table-dark">
                         <tr>
                             <!-- <th scope="col">#</th> -->
@@ -278,7 +232,7 @@ $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
                                 <td class="align-middle">
                                     <div class="dropdown">
                                         <button class="btn btn-primary dropdown-toggle" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" type="button" id="dropdownMenuButton<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Opciones
+                                            <i class="bi bi-list"></i>
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo $grupo['creacion_grupo_id']; ?>">
                                             <li><a class="dropdown-item btn-edit-group" href="#" data-group-id="<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalEditGroup">Editar</a></li>
@@ -377,7 +331,6 @@ $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
                 });
             });
         });
-
     </script>
 
     <!-------------------------Librería  datatable para la tabla -------------------------->
