@@ -3,9 +3,9 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="formAddContact" method="POST" action="../controllers/contactController.php?action=add" enctype="multipart/form-data">
-                <div class="modal-header ">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title titulo_modal" id="modalAddContactLabel">Agregar Contacto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -73,9 +73,9 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="formEditContact" method="POST" action="../controllers/contactController.php?action=edit" enctype="multipart/form-data" >
-                <div class="modal-header">
+                <div class="modal-header bg-warning">
                     <h5 class="modal-title titulo_modal" id="modalEditContactLabel">Editar Contacto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="edit-contact-id" name="contact_id">
@@ -141,9 +141,9 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="formDeleteContact" method="POST" action="../controllers/contactController.php?action=delete">
-                <div class="modal-header">
+                <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title titulo_modal" id="modalDeleteContactLabel">Eliminar Contacto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>¿Está seguro de que desea eliminar este contacto?</p>
@@ -164,9 +164,9 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="formAddContact" method="POST" action="../controllers/groupController.php?action=add" enctype="multipart/form-data">
-                <div class="modal-header ">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title titulo_modal" id="modalAddGroupLabel">Crear un nuevo grupo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">

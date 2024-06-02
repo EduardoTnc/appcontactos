@@ -3,6 +3,7 @@
 require_once '../config/db.php';
 require_once '../models/Contact.php';
 require_once '../models/Group.php';
+require_once '../models/GroupContact.php';
 
 // Iniciar sesión para acceder a las variables de sesión
 session_start();
@@ -32,6 +33,9 @@ $grupo = new Group($conexion);
 // Obtener los grupos del usuario actual
 $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
 
+// Crear una instancia del modelo GroupContact para consultar los contactos de un grupo
+$groupContact = new GroupContact($conexion);
+
 ?>
 
 <!DOCTYPE html>
@@ -51,18 +55,6 @@ $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
     <style>
         body {
             background-color: #bccae3 !important;
-        }
-
-        .col-10 {
-            background-color: #fff !important;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .col-2 {
-            background-color: #fff !important;
-            padding: 20px;
-            border-radius: 10px;
         }
 
         label,
@@ -122,134 +114,168 @@ $grupos = $grupo->obtenerGruposPorUsuarioID($_SESSION['user_id']);
             border-radius: 50%;
             width: 40px;
         }
+
+        .foto-perfil-grupos{
+            aspect-ratio: 1;
+            border-radius: 50%;
+            width: 25px;
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="container rounded-pill">
+
+    <div class="container rounded">
         <h1 class="text-center mt-4  fw-bold ">Bienvenido <strong><?php echo ($_SESSION['user_name']); ?></strong> a tu aplicación de contactos</h1>
     </div>
-    <div class="container-xxl">
-        <div class="row">
-            <div class="col-10 ">
-                <div class="row justify-content-md-center">
-                    <div class="col-md-12">
-                        <h3>
-                            <span class="float-start">
+    <div class="container-xxl ">
+        <div class="row align-items-start justify-content-evenly">
+            <div class="col-8 rounded-4 bg-light p-3">
+                <h3>
+                    <strong>CONTACTOS</strong> <sup class="fs-6">(<?php echo $totalContactos ?>)</sup>
 
-                            </span>
-                            Tienes <?php echo $totalContactos ?> contactos registrados.
-                            <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#modalAddContact">
-                                Nuevo Contacto
-                            </button>
-                            <!-- <span class="float-end">
+                    <!-- <button type="button" class="btn btn-primary float-end ms-2" data-bs-toggle="modal" data-bs-target="#modalAddGroup">
+                        Nuevo Grupo
+                    </button> -->
+                    <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#modalAddContact">
+                        Nuevo Contacto
+                    </button>
+                    <!-- <span class="float-end">
                                 <a href="exportar.php" class="btn btn-success" title="Exportar a CSV" download="empleados.csv"><i class="bi bi-filetype-csv"></i> Exportar</a>
                             </span> -->
-                            <!-- <hr> -->
-                        </h3>
+                    <!-- <hr> -->
+                </h3>
 
-                        <!-- TABLA CONTACTOS -->
-                        <div class="table-responsive">
-                            <table class="table table-hover" id="tabla_contactos">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Nombre</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Teléfono</th>
-                                        <th scope="col">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($contactos as $contacto) : ?>
-                                        <tr>
-                                            <th scope="row" class="align-middle"><?php echo $contacto['contacto_id']; ?></th>
-                                            <td class="align-middle">
-                                                <img class="foto-perfil" src="<?php echo !empty($contacto['foto_perfil']) ? htmlspecialchars($contacto['foto_perfil']) : 'fotos/default-profile.png'; ?>" alt="Foto de perfil">
-                                                <?php echo htmlspecialchars($contacto['nombre']); ?> <?php echo htmlspecialchars($contacto['apellido']); ?>
-                                            </td>
+                <!-- TABLA CONTACTOS -->
+                <div class="table-responsive">
+                    <table class="table table-hover" id="tabla_contactos">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Teléfono</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contactos as $contacto) : ?>
+                                <tr>
+                                    <th scope="row" class="align-middle"><?php echo $contacto['contacto_id']; ?></th>
+                                    <td class="align-middle">
+                                        <img class="foto-perfil" src="<?php echo !empty($contacto['foto_perfil']) ? htmlspecialchars($contacto['foto_perfil']) : 'fotos/default-profile.png'; ?>" alt="Foto de perfil">
+                                        <?php echo htmlspecialchars($contacto['nombre']); ?> <?php echo htmlspecialchars($contacto['apellido']); ?>
+                                    </td>
 
-                                            <td class="align-middle"><?php echo htmlspecialchars($contacto['email']); ?></td>
-                                            <td class="align-middle"><?php echo htmlspecialchars($contacto['telefono']); ?></td>
-                                            <td class="align-middle d-flex">
-                                                <div class="dropdown">
-                                                    <!-- Botón para agregar contacto a grupos -->
-                                                    <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" data-contact-id="<?php echo $contacto['contacto_id']; ?>" aria-expanded="false">
-                                                        <i class="bi bi-plus-circle"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-dark">
-                                                        <?php foreach ($grupos as $grupo) : ?>
-                                                            <li>
-                                                                <form action="../controllers/grupoContactosController.php" method="POST">
-                                                                    <input type="hidden" name="contacto_id" value="<?php echo $contacto['contacto_id']; ?>">
-                                                                    <input type="hidden" name="grupo_id" value="<?php echo $grupo['creacion_grupo_id']; ?>">
-                                                                    <button type="submit" class="dropdown-item"><?php echo htmlspecialchars($grupo['nombre_grupo']); ?></button>
-                                                                </form>
-                                                            </li>
-                                                        <?php endforeach; ?>
-                                                        <li><a class="dropdown-item bg-success text-white btn" data-bs-toggle="modal" data-bs-target="#modalAddGroup">Crear un nuevo grupo</a></li>
-                                                    </ul>
-                                                </div>
+                                    <td class="align-middle"><?php echo htmlspecialchars($contacto['email']); ?></td>
+                                    <td class="align-middle"><?php echo htmlspecialchars($contacto['telefono']); ?></td>
+                                    <td class="align-middle">
+                                        <div class="btn-group" role="group" aria-label="Basic mixed styles">
+                                            <div class="dropdown btn-group dropstart">
+                                                <!-- Botón para agregar contacto a grupos -->
+                                                <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" data-contact-id="<?php echo $contacto['contacto_id']; ?>" aria-expanded="false">
+                                                    <i class="bi bi-person-fill-up"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-dark text-center">
+                                                    <li>
+                                                        <h6 class="dropdown-header">Añadir a un grupo</h6>
+                                                    </li>
+                                                    <?php foreach ($grupos as $grupo) : ?>
+                                                        <li>
+                                                            <form action="../controllers/grupoContactosController.php?action=add" method="POST">
+                                                                <input type="hidden" name="contacto_id" value="<?php echo $contacto['contacto_id']; ?>">
+                                                                <input type="hidden" name="grupo_id" value="<?php echo $grupo['creacion_grupo_id']; ?>">
+                                                                <button type="submit" class="dropdown-item"><?php echo htmlspecialchars($grupo['nombre_grupo']); ?></button>
+                                                            </form>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                    <li><a class="dropdown-item bg-primary text-white btn mt-3" data-bs-toggle="modal" data-bs-target="#modalAddGroup">Nuevo grupo</a></li>
+                                                </ul>
+                                            </div>
 
-                                                <!-- Botón para editar contacto -->
-                                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>"><i class="bi bi-pencil-square"></i></button>
-                                                <!-- Botón para eliminar contacto -->
-                                                <button class="btn btn-danger btn-delete-contact" data-bs-toggle="modal" data-bs-target="#modalDeleteContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>"><i class="bi bi-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                                            <!-- Botón para editar contacto -->
+                                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>">
+                                                <i class="bi bi-pencil-square"></i></button>
+                                            <!-- Botón para eliminar contacto -->
+                                            <button class="btn btn-danger btn-delete-contact" data-bs-toggle="modal" data-bs-target="#modalDeleteContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>">
+                                                <i class="bi bi-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- NUEVA COLUMNA PARA LOS GRUPOS -->
+            <div class="col-3 text-center rounded-4 bg-light p-3">
+                <h3 class="mb-3 text-dark d-flex justify-content-between">
+                    <strong class="text-start">GRUPOS</strong>
+                    <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#modalAddGroup">
+                        Nuevo Grupo
+                    </button>
+                </h3>
+
+                <?php foreach ($grupos as $grupo) : ?>
+                    <div class="row mb-2">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-dark col-10 text-start" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $grupo['creacion_grupo_id']; ?>" aria-expanded="false" aria-controls="collapse<?php echo $grupo['creacion_grupo_id']; ?>">
+                                <?php echo htmlspecialchars($grupo['nombre_grupo']); ?>
+                            </button>
+                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split col" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Opciones</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item btn-edit-group" href="#" data-group-id="<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalEditGroup">Editar Grupo</a></li>
+                                <li><a class="dropdown-item btn-delete-group" href="#" data-group-id="<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalDeleteGroup">Eliminar Grupo</a></li>
+                            </ul>
+                        </div>
+                        <div class="collapse" id="collapse<?php echo $grupo['creacion_grupo_id']; ?>">
+                            <div class="card card-body mt-2 p-0">
+                                <!-- Bucle for para insertar uno por uno los contactos del grupo -->
+                                <?php
+                                $contactosDelGrupo = $groupContact->obtenerContactosPorGrupoID($grupo['creacion_grupo_id']);
+                                foreach ($contactosDelGrupo as $contacto) : ?>
+                                    <li class="list-group-item d-flex mb-1 align-items-center">
+                                        <img class="foto-perfil-grupos p-2" src="<?php echo !empty($contacto['foto_perfil']) ? htmlspecialchars($contacto['foto_perfil']) : 'fotos/default-profile.png'; ?>" alt="Foto de perfil">
+                                        <small class="p-2">
+                                            <?php echo htmlspecialchars($contacto['nombre']); ?> <?php echo htmlspecialchars($contacto['apellido']); ?>
+                                        </small>
+                                        <div class="btn-group ms-auto p-2" role="group" aria-label="Basic mixed styles">
+                                            <!-- Botón para editar contacto -->
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <!-- Botón para eliminar contacto -->
+                                            <button class="btn btn-danger btn-delete-contact btn-sm" data-bs-toggle="modal" data-bs-target="#modalDeleteContact" data-contact-id="<?php echo $contacto['contacto_id']; ?>">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                            <!-- Botón para remover contacto del grupo -->
+                                            <form class="btn-group" action="../controllers/grupoContactosController.php?action=remove" method="POST" style="display:inline;">
+                                                <input type="hidden" name="contacto_id" value="<?php echo $contacto['contacto_id']; ?>">
+                                                <input type="hidden" name="grupo_id" value="<?php echo $grupo['creacion_grupo_id']; ?>">
+                                                <button type="submit" class="btn btn-dark btn-sm">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-2 text-center">
-
-                <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#modalAddGroup">
-                    Nuevo Grupo
-                </button>
-
-                <h3 class="mt-4">
-                    Grupos
-                </h3>
-                <!-- TABLA GRUPOS -->
-
-                <table class="table table-hover table-dark" id="tabla_grupos">
-                    <thead class="table-dark">
-                        <tr>
-                            <!-- <th scope="col">#</th> -->
-                            <!-- <th scope="col">Nombre</th> -->
-                            <!-- <th scope="col">Acciones</th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($grupos as $grupo) : ?>
-                            <tr>
-                                <!-- <th scope="row" class="align-middle"><?php echo $grupo['creacion_grupo_id']; ?></th> -->
-                                <td class="align-middle"><?php echo htmlspecialchars($grupo['nombre_grupo']); ?></td>
-                                <td class="align-middle">
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" type="button" id="dropdownMenuButton<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-list"></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo $grupo['creacion_grupo_id']; ?>">
-                                            <li><a class="dropdown-item btn-edit-group" href="#" data-group-id="<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalEditGroup">Editar</a></li>
-                                            <li><a class="dropdown-item btn-delete-group" href="#" data-group-id="<?php echo $grupo['creacion_grupo_id']; ?>" data-bs-toggle="modal" data-bs-target="#modalDeleteGroup">Eliminar</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <?php endforeach; ?>
             </div>
         </div>
+
+    </div>
     </div>
 
     <div class="container">
-        <span class="float-end mt-2">
+        <span class="float-end mt-2 mb-2">
             <a href="../controllers/authController.php?action=logout" onclick="modalRegistrarEmpleado()" class="btn btn-danger" title="Registrar Nuevo Empleado">
                 <i class="bi bi-door-open"> Cerrar Sesión</i>
             </a>
