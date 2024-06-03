@@ -1,45 +1,16 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es-PE">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App Contactos</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<!-- HTML DEL FORMULARIO DE INICIO DE SESIÓN (ANTIGUO)-->
-<!-- <div class="container">
-    <h2>Iniciar Sesión</h2>
-    <form method="POST" action="../controllers/authController.php?action=login">
-        <div class="form-group">
-            <label for="email">Correo Electrónico:</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Contraseña:</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Ingresar</button>
-    </form>
-</div> -->
-
-<!-- HTML DEL FORMULARIO DE REGISTRO (ANTIGUO)-->
-<!-- <div class="container">
-    <h2>Registrarse</h2>
-    <form method="POST" action="../controllers/authController.php?action=register">
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" required>
-        </div>
-        <div class="form-group">
-            <label for="email">Correo Electrónico:</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Contraseña:</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrarse</button>
-    </form>
-</div> -->
 <!-- ESTILOS CSS -->
 <style>
     *,
@@ -104,31 +75,26 @@
         border: 0 solid transparent;
     }
 
-    .form-box input[type*="submit"] {
+    .form-box button[type*="submit"] {
+        margin: 5px 0px 20px 0px;
         width: 100%;
         padding: 10px;
         font-size: 18px;
-        background-color: cornflowerblue;
+        background-color: #327cf1;
         color: white;
         border: 0;
         border-radius: 6px;
         transition: background-color 0.4s, color 0.4s;
     }
 
-    .form-box input[type="submit"]:hover {
+    .form-box button[type="submit"]:hover {
         color: white;
-        background-color: #29914b;
+        background-color: #0174cb;
         transition: background-color 0.4s, color 0.4s;
     }
 
-
-
     .form-box input[name="info"]:first-child {
         margin-top: 30px;
-    }
-
-    .form-box input[name="sexo"] {
-        position: relative;
     }
 
     /* Div con Mensaje de envio */
@@ -190,13 +156,26 @@
         }
     }
 
-    .cornflowerblue-color {
+    .special-color {
         color: cornflowerblue;
         text-shadow: 2px 2px 3px rgb(0, 0, 0);
+    }
+
+    .alert-container {
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1050;
+        width: 30%;
     }
 </style>
 
 <body>
+
+    <!-- Contenedor de la alerta -->
+    <div id="alert-container" class="alert-container"></div>
+
     <!-- <video src="fondo-video2.mp4" autoplay muted loop id="fondo-video"></video> -->
 
     <section class="form-container">
@@ -204,11 +183,10 @@
         <div class="form-section  login" id="login-box">
             <form action="../controllers/authController.php?action=login" method="POST" class="form-box">
 
-                <h1>APP CONTACTOS <span class="cornflowerblue-color">INICIO DE SESIÓN</span></h1>
-
+                <h1>APP CONTACTOS <span class="special-color">INICIO DE SESIÓN</span></h1>
                 <p>Correo :<input type="email" name="email" id="email-login" maxlength="50" required /></p>
                 <p>Contraseña :<input type="password" name="password" id="password-login" maxlength="50" required /></p>
-                <p><input type="submit" name="" class="boton-enviar" /></p>
+                <button type="submit" class="boton-enviar">Ingresar</button>
 
                 <section class="cambioFormulario">
                     ¿No tienes una cuenta? →
@@ -216,12 +194,13 @@
                 </section>
 
             </form>
+
         </div>
 
         <div class="form-section hide register" id="form-box">
             <form action="../controllers/authController.php?action=register" method="POST" class="form-box">
 
-                <h1>APP CONTACTOS <span class="cornflowerblue-color">REGISTRO</span></h1>
+                <h1>APP CONTACTOS <span class="special-color">REGISTRO</span></h1>
 
                 <p>Ingresa tu nombre de usuario:<input type="text" name="nombre" id="nombre" maxlength="60" required /></p>
                 <p>Ingresa tu correo:<input type="email" name="email" id="email-register" maxlength="60" required /></p>
@@ -235,9 +214,7 @@
                     aceptado las condiciones generales del programa y la normativa sobre
                     protección de datos.
                 </p>
-                <p>
-                    <input type="submit" id="" name="" class="boton-enviar" />
-                </p>
+                <button type="submit" class="boton-enviar">Registrarse</button>
                 <section class="cambioFormulario">
                     ¿Ya tienes una cuenta? →
                     <button type="button" id="sign-in">Iniciar Sesión</button>
@@ -248,6 +225,11 @@
 
     </section>
 </body>
+
+<!-- Incluyendo jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Incluir Bootstrap JS y dependencias -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <!-- SCRIPT JS PARA CAMBIAR ENTRE FORMULARIOS DE REGISTRO Y INICIO DE SESIÓN -->
 <script>
@@ -270,3 +252,26 @@
     });
 </script>
 
+<!-- SCRIPT JS PARA ALERTA DE CREDENCIALES INCORRECTAS o ERROR AL REGISTRARSE-->
+<script>
+    $(document).ready(function() {
+        <?php if (isset($_SESSION['mensaje'])) : ?>
+            var errorMessage = "<?php echo $_SESSION['mensaje'];
+                                unset($_SESSION['mensaje']); ?>";
+            var alertaHTML = `
+                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    ${errorMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            $('#alert-container').html(alertaHTML);
+
+            // Desvanecer la alerta después de 3 segundos
+            window.setTimeout(function() {
+                $(".alert").fadeTo(500, 0).slideUp(500, function() {
+                    $(this).remove();
+                });
+            }, 3000); // 3 segundos
+        <?php endif; ?>
+    });
+</script>

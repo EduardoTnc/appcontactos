@@ -106,6 +106,15 @@ $groupContact = new GroupContact($conexion);
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+
+            justify-content: center;
+            align-items: center;
+            /* min-height: 100vh; */
+            /* width: 100%; */
+
+            background: url("paisaje.jpg") no-repeat;
+            background-position: center;
+            background-size: cover;
         }
 
 
@@ -115,7 +124,7 @@ $groupContact = new GroupContact($conexion);
             width: 40px;
         }
 
-        .foto-perfil-grupos{
+        .foto-perfil-grupos {
             aspect-ratio: 1;
             border-radius: 50%;
             width: 25px;
@@ -127,7 +136,7 @@ $groupContact = new GroupContact($conexion);
 
 
     <div class="container rounded">
-        <h1 class="text-center mt-4  fw-bold ">Bienvenido <strong><?php echo ($_SESSION['user_name']); ?></strong> a tu aplicación de contactos</h1>
+        <h1 class="text-center mt-3 mb-3 fw-bold">Bienvenido <strong><?php echo ($_SESSION['user_name']); ?></strong> a tu aplicación de contactos</h1>
     </div>
     <div class="container-xxl ">
         <div class="row align-items-start justify-content-evenly">
@@ -257,7 +266,7 @@ $groupContact = new GroupContact($conexion);
                                             <form class="btn-group" action="../controllers/grupoContactosController.php?action=remove" method="POST" style="display:inline;">
                                                 <input type="hidden" name="contacto_id" value="<?php echo $contacto['contacto_id']; ?>">
                                                 <input type="hidden" name="grupo_id" value="<?php echo $grupo['creacion_grupo_id']; ?>">
-                                                <button type="submit" class="btn btn-dark btn-sm">
+                                                <button type="submit" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Remover del grupo">
                                                     <i class="bi bi-x-circle"></i>
                                                 </button>
                                             </form>
@@ -286,10 +295,13 @@ $groupContact = new GroupContact($conexion);
 
     <!-- Incluir Bootstrap JS y dependencias -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 
     <script>
-        // Script para cargar datos en el modal de edición
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
+        // Script para cargar datos en el modal de edición
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-warning').forEach(button => {
                 button.addEventListener('click', () => {
